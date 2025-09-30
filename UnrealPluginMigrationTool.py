@@ -44,7 +44,7 @@ def main(page: ft.Page):
     page.title = "unreal plugin rebuilder"
     page.window_resizable = True
     page.window.width = 800
-    page.window.height = 850
+    page.window.height = 860
     page.window.frameless = True
     page.padding = 20
     page.spacing = 15
@@ -153,6 +153,10 @@ def main(page: ft.Page):
             uplugin_dropdown.value = file_path
             add_to_cache(path_cache, "uplugin_paths", file_path)
             uplugin_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["uplugin_paths"]]
+            uplugin_dropdown.disabled = False
+            if hasattr(uplugin_dropdown, 'empty_text'):
+                uplugin_dropdown.empty_text.visible = False
+                uplugin_dropdown.empty_text.update()
         else:
             uplugin_dropdown.value = "No *.uplugin file was selected!"
         uplugin_dropdown.update()
@@ -164,17 +168,26 @@ def main(page: ft.Page):
     def delete_uplugin_cache(e):
         if uplugin_dropdown.value and uplugin_dropdown.value != "No *.uplugin file was selected!":
             remove_from_cache(path_cache, "uplugin_paths", uplugin_dropdown.value)
-            uplugin_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["uplugin_paths"]]
-            uplugin_dropdown.value = None
+            if path_cache["uplugin_paths"]:
+                uplugin_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["uplugin_paths"]]
+                uplugin_dropdown.value = None
+            else:
+                uplugin_dropdown.options = []
+                uplugin_dropdown.value = None
+                uplugin_dropdown.disabled = True
+                if hasattr(uplugin_dropdown, 'empty_text'):
+                    uplugin_dropdown.empty_text.visible = True
+                    uplugin_dropdown.empty_text.update()
             uplugin_dropdown.update()
 
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
     uplugin_dropdown = ft.Dropdown(
         label="Select .uplugin file",
-        options=[ft.dropdown.Option(path) for path in path_cache["uplugin_paths"]],
+        options=[ft.dropdown.Option(path) for path in path_cache["uplugin_paths"]] if path_cache["uplugin_paths"] else [],
         on_change=uplugin_dropdown_changed,
         width=400,
-        expand=True
+        expand=True,
+        disabled=not path_cache["uplugin_paths"]
     )
 
     # Save directory dropdown and picker
@@ -183,6 +196,10 @@ def main(page: ft.Page):
             save_dropdown.value = e.path
             add_to_cache(path_cache, "save_paths", e.path)
             save_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["save_paths"]]
+            save_dropdown.disabled = False
+            if hasattr(save_dropdown, 'empty_text'):
+                save_dropdown.empty_text.visible = False
+                save_dropdown.empty_text.update()
         else:
             save_dropdown.value = "No save directory was selected!"
         save_dropdown.update()
@@ -194,17 +211,26 @@ def main(page: ft.Page):
     def delete_save_cache(e):
         if save_dropdown.value and save_dropdown.value != "No save directory was selected!":
             remove_from_cache(path_cache, "save_paths", save_dropdown.value)
-            save_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["save_paths"]]
-            save_dropdown.value = None
+            if path_cache["save_paths"]:
+                save_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["save_paths"]]
+                save_dropdown.value = None
+            else:
+                save_dropdown.options = []
+                save_dropdown.value = None
+                save_dropdown.disabled = True
+                if hasattr(save_dropdown, 'empty_text'):
+                    save_dropdown.empty_text.visible = True
+                    save_dropdown.empty_text.update()
             save_dropdown.update()
 
     save_directory_dialog = ft.FilePicker(on_result=save_directory_result)
     save_dropdown = ft.Dropdown(
         label="Plugin destination folder",
-        options=[ft.dropdown.Option(path) for path in path_cache["save_paths"]],
+        options=[ft.dropdown.Option(path) for path in path_cache["save_paths"]] if path_cache["save_paths"] else [],
         on_change=save_dropdown_changed,
         width=400,
-        expand=True
+        expand=True,
+        disabled=not path_cache["save_paths"]
     )
 
     # UE directory dropdown and picker
@@ -213,6 +239,10 @@ def main(page: ft.Page):
             ue_dropdown.value = e.path
             add_to_cache(path_cache, "ue_paths", e.path)
             ue_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["ue_paths"]]
+            ue_dropdown.disabled = False
+            if hasattr(ue_dropdown, 'empty_text'):
+                ue_dropdown.empty_text.visible = False
+                ue_dropdown.empty_text.update()
         else:
             ue_dropdown.value = 'No UE root folder was selected! (Example "C:\\Program Files\\Epic Games\\UE_5.3)"'
         ue_dropdown.update()
@@ -224,17 +254,26 @@ def main(page: ft.Page):
     def delete_ue_cache(e):
         if ue_dropdown.value and ue_dropdown.value != 'No UE root folder was selected! (Example "C:\\Program Files\\Epic Games\\UE_5.3)"':
             remove_from_cache(path_cache, "ue_paths", ue_dropdown.value)
-            ue_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["ue_paths"]]
-            ue_dropdown.value = None
+            if path_cache["ue_paths"]:
+                ue_dropdown.options = [ft.dropdown.Option(path) for path in path_cache["ue_paths"]]
+                ue_dropdown.value = None
+            else:
+                ue_dropdown.options = []
+                ue_dropdown.value = None
+                ue_dropdown.disabled = True
+                if hasattr(ue_dropdown, 'empty_text'):
+                    ue_dropdown.empty_text.visible = True
+                    ue_dropdown.empty_text.update()
             ue_dropdown.update()
 
     get_directory_dialog = ft.FilePicker(on_result=ue_get_directory_result)
     ue_dropdown = ft.Dropdown(
         label="Select UE root folder",
-        options=[ft.dropdown.Option(path) for path in path_cache["ue_paths"]],
+        options=[ft.dropdown.Option(path) for path in path_cache["ue_paths"]] if path_cache["ue_paths"] else [],
         on_change=ue_dropdown_changed,
         width=400,
-        expand=True
+        expand=True,
+        disabled=not path_cache["ue_paths"]
     )
 
     # Hide all dialogs in overlay
@@ -327,11 +366,22 @@ def main(page: ft.Page):
         t.start()
 
     # Helper to create input sections with consistent styling
-    def create_input_section(title, button_text, button_icon, dropdown, delete_func, browse_func):
+    def create_input_section(title, button_text, button_icon, dropdown, delete_func, browse_func, empty_message):
+        empty_text = ft.Text(
+            empty_message,
+            size=12,
+            color=ft.Colors.ON_SURFACE_VARIANT,
+            visible=dropdown.disabled,
+        )
+        
+        # Store reference to empty_text for later updates
+        dropdown.empty_text = empty_text
+        
         return ft.Container(
             content=ft.Column(
                 [
                     ft.Text(title, size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.PRIMARY),
+                    empty_text,
                     ft.Row(
                         [
                             ft.ElevatedButton(
@@ -366,6 +416,7 @@ def main(page: ft.Page):
         uplugin_dropdown,
         delete_uplugin_cache,
         lambda _: pick_files_dialog.pick_files(allowed_extensions=["uplugin"]),
+        "No cached files - use Browse button first",
     )
 
     save_section = create_input_section(
@@ -375,6 +426,7 @@ def main(page: ft.Page):
         save_dropdown,
         delete_save_cache,
         lambda _: save_directory_dialog.get_directory_path(),
+        "No cached folders - use Browse button first",
     )
 
     ue_section = create_input_section(
@@ -384,6 +436,7 @@ def main(page: ft.Page):
         ue_dropdown,
         delete_ue_cache,
         lambda _: get_directory_dialog.get_directory_path(),
+        "No cached UE folders - use Browse button first",
     )
 
     # App layout
