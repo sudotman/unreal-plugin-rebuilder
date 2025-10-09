@@ -15,6 +15,11 @@ this is a simple python application that provides a GUI for rebuilding/migrating
 2. select the `.uplugin` file you want to rebuild, select the plugin destination folder and your UE installation's root [e.g. C:\Program Files\Epic Games\UE_5.5].
 3. click on the "rebuild" button to rebuild.
 
+## debugging
+there is a pesky bug in UAT where in you might get a `Unhandled exception: System.ArgumentNullException: Value cannot be null. (Parameter 'element')` for building any plugin if you have VisualStudioTools installed - remove from `{Engine}/Engine/Plugins/VisualStudioTools` and try building. not sure what causes this and what might be a better solution.
+
+for an alternative solution, try this: https://forums.unrealengine.com/t/ubt-bug-no-longer-able-to-compile-plugins-in-standalone-since-5-3/1318659/11
+
 ## building from py
 build the application using PyInstaller:
 
